@@ -1,0 +1,36 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: catalogue
+  namespace: udbc
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 4
+  paused: false
+  replicas: 3
+  minReadySeconds: 20
+  selector:
+    matchLabels:
+      role: catalogue
+    matchExpressions:
+      - {key: version, operator: In, values: [v1, v2, v3]}
+  template:
+    metadata:
+      name: catalogue
+      labels:
+        app: go
+        role: catalogue
+        version: v1
+    spec:
+      containers:
+        - name: catalogue
+          image: bgops/catalogue:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+         # restartPolicy: Always
