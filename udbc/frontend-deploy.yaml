@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: front-end
+  namespace: udbc
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 4
+  paused: false
+  replicas: 3
+  minReadySeconds: 20
+  selector:
+    matchLabels:
+      role: front-end
+    matchExpressions:
+      - {key: version, operator: In, values: [v1, v2, v3]}
+  template:
+    metadata:
+      name: front-end
+      labels:
+        app: nodejs
+        role: front-end
+        version: v1
+    spec:
+      containers:
+        - name: front-end
+          image: bgops/front-end:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8079
+              protocol: TCP
+         # restartPolicy: Always

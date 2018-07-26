@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: front-end
+  namespace: udbc
+spec:
+  rules:
+    - host: front-end.co.in
+      http:
+        paths:
+          - backend:
+              serviceName: front-end
+              servicePort: 8079

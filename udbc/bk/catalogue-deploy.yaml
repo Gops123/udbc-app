@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1 
+kind: Deployment
+metadata:
+  name: catalogue
+  namespace: udbc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogue
+  template:
+    metadata:
+      labels:
+        app: catalogue
+    spec:
+      tolerations:
+        - key: "dedicate"
+          operator: "Equal"
+          value: "catalogue"
+          effect: "NoExecute"
+      containers:
+        - name: catalogue
+          image: bgops/catalogue:v4
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+         # restartPolicy: Always
